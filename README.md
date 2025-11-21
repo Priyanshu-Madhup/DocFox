@@ -1,70 +1,245 @@
-# Getting Started with Create React App
+# DocFox 🦊
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> AI-Powered Document Intelligence Platform - NotebookLM-style interface with advanced features
 
-## Available Scripts
+DocFox is a full-stack AI document assistant that combines document processing, AI chat, audio podcasts, visual presentations, and more - all in a clean, minimal interface inspired by NotebookLM.
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+### 📚 Document Management
+- **Upload & Process PDFs** - Extract text and create searchable embeddings
+- **Multiple Notebooks** - Organize documents by project/topic
+- **Smart Chunking** - Intelligent document segmentation for better AI responses
+- **Vector Search** - Fast semantic search using FAISS + Sentence Transformers
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🤖 AI Assistant (Groq LLaMA 3.3-70B)
+- **Context-Aware Chat** - RAG-powered responses using your documents
+- **Chat History** - Persistent conversation tracking
+- **Streaming Responses** - Real-time AI output
+- **Smart Context** - Automatically retrieves relevant document chunks
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🎙️ Audio Podcast Generation
+- **AI Narration** - Generates 5-8 minute audio podcasts from documents
+- **Natural Voice** - Edge TTS with Jenny Neural voice
+- **Script Generation** - Creates engaging podcast scripts with timestamps
+- **Download & Navigate** - Clickable timestamps and MP3 download
 
-### `npm test`
+### 🎬 Visual Podcast (Slides)
+- **Auto-Generate Slides** - Creates presentation slides from documents
+- **Custom Templates** - Professional slide designs with text overlay
+- **Bullet Points** - Key takeaways extracted by AI
+- **Export Ready** - High-quality PNG slides
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🌐 Web & Content Features
+- **Web Scraping** - Extract content from URLs (Firecrawl)
+- **YouTube Video Search** - Find relevant videos by topic (Serper API)
+- **Mindmap Generation** - Visual knowledge graphs
+- **Website Generation** - Create HTML sites from documents
 
-### `npm run build`
+### 📝 Editor & UI
+- **Markdown Editor** - Rich text editing with auto-save
+- **Dark/Light Mode** - Theme toggle with system preference
+- **Responsive Design** - Mobile-friendly interface
+- **LocalStorage Persistence** - Auto-save your work
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🚀 Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Node.js** 16+ (for frontend)
+- **Python** 3.8+ (for backend)
+- **API Keys** (see Configuration below)
 
-### `npm run eject`
+### Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/docfox.git
+cd docfox
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. **Install frontend dependencies**
+```bash
+npm install
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. **Install backend dependencies**
+```bash
+cd backend
+pip install -r requirements.txt
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. **Configure environment variables**
+```bash
+cd backend
+cp .env.example .env
+# Edit .env with your API keys
+```
 
-## Learn More
+### Configuration
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Create a `backend/.env` file with the following API keys:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```env
+# Required API Keys
+GROQ_API_KEY=your-groq-api-key-here          # Get from: https://console.groq.com
+FIRECRAWL_API_KEY=your-firecrawl-api-key    # Get from: https://firecrawl.dev
+SERPER_API_KEY=your-serper-api-key          # Get from: https://serper.dev
 
-### Code Splitting
+# Application Settings
+SECRET_KEY=your-random-secret-key-here
+DATABASE_URL=sqlite:///./docfox.db
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Running the Application
 
-### Analyzing the Bundle Size
+**Start Backend (Terminal 1):**
+```bash
+cd backend
+python main.py
+# Backend runs on http://localhost:8001
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**Start Frontend (Terminal 2):**
+```bash
+npm start
+# Frontend runs on http://localhost:3000
+```
 
-### Making a Progressive Web App
+The app should open automatically in your browser at `http://localhost:3000`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📁 Project Structure
 
-### Advanced Configuration
+```
+docfox/
+├── backend/
+│   ├── main.py              # FastAPI backend
+│   ├── auth.py              # Authentication
+│   ├── database.py          # SQLite database
+│   ├── models.py            # Data models
+│   ├── schemas.py           # Pydantic schemas
+│   ├── flashcard_system.py  # Flashcard generation
+│   ├── quiz_system.py       # Quiz generation
+│   ├── routers/             # API route modules
+│   ├── data/                # Document storage
+│   │   ├── notebooks.json
+│   │   ├── processed_documents.json
+│   │   └── uploaded_files/
+│   └── requirements.txt
+│
+├── src/
+│   ├── components/          # React components
+│   │   ├── Sidebar.js       # Notebook list
+│   │   ├── PageList.js      # Document list + AI Studio
+│   │   ├── NoteEditor.js    # Markdown editor
+│   │   ├── AIPanel.js       # Chat interface
+│   │   ├── TopBar.js        # Navigation
+│   │   └── (modals for various features)
+│   ├── context/
+│   │   └── AuthContext.js   # Authentication context
+│   └── state/
+│       └── notebookState.js # State management
+│
+├── public/
+│   └── ppt_temp.png        # Slide template
+└── README.md
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🛠️ Tech Stack
 
-### Deployment
+### Frontend
+- **React** 18 - UI framework
+- **React Router** - Navigation
+- **LocalStorage** - Client-side persistence
+- **CSS3** - Styling with gradients & animations
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Backend
+- **FastAPI** - Python web framework
+- **Groq API** - LLaMA 3.3-70B language model
+- **Sentence Transformers** - Document embeddings
+- **FAISS** - Vector similarity search
+- **PyPDF2** - PDF text extraction
+- **Edge TTS** - Audio generation
+- **Pillow (PIL)** - Image processing
+- **MoviePy** - Video generation
+- **Firecrawl** - Web scraping
+- **Serper API** - Video search
 
-### `npm run build` fails to minify
+### Storage
+- **SQLite** - User data
+- **JSON Files** - Document metadata
+- **LocalStorage** - Frontend state
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🎯 Key Features Explained
+
+### Audio Podcast
+1. Retrieves 30 document chunks for context
+2. Generates 5-8 minute podcast script using LLaMA 3.3-70B
+3. Converts script to speech with Edge TTS (Jenny Neural voice)
+4. Creates clickable timestamp navigation
+5. Provides MP3 download
+
+### Visual Podcast
+1. Extracts key information from document
+2. Generates 5-6 slide outlines with bullet points
+3. Overlays text on professional slide template
+4. Exports high-quality PNG slides
+
+### RAG Chat
+1. User sends a question
+2. Embeds question using Sentence Transformers
+3. Searches FAISS index for top 10 relevant chunks
+4. Sends chunks + question to LLaMA 3.3-70B
+5. Streams AI response back to user
+
+## 🔒 Security Notes
+
+- ✅ `.env` files are gitignored
+- ✅ API keys stored in environment variables
+- ✅ No hardcoded credentials
+- ⚠️ Always use `.env.example` as template
+- ⚠️ Never commit your actual `.env` file
+
+## 🐛 Troubleshooting
+
+**Backend won't start:**
+- Check Python version: `python --version` (need 3.8+)
+- Install dependencies: `pip install -r requirements.txt`
+- Verify API keys in `.env`
+
+**Frontend won't connect:**
+- Ensure backend is running on port 8001
+- Check CORS settings in `main.py`
+- Clear browser cache
+
+**Audio generation fails:**
+- Verify Edge TTS is installed: `pip install edge-tts`
+- Check disk space in `data/generated_images/`
+
+**No search results:**
+- Upload and process a PDF first
+- Wait for embedding generation to complete
+- Check console for FAISS index errors
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Built with [Create React App](https://create-react-app.dev/)
+- Inspired by [NotebookLM](https://notebooklm.google/)
+- AI powered by [Groq](https://groq.com/)
+- Voice synthesis by [Edge TTS](https://github.com/rany2/edge-tts)
+
+---
+
+Made with ❤️ using React, FastAPI, and LLaMA 3.3-70B

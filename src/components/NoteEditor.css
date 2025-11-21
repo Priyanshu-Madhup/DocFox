@@ -1,0 +1,572 @@
+.NoteEditor { 
+  display: flex; 
+  flex-direction: column; 
+  height: 100%; 
+  padding: 1.5rem 2rem 0 2rem; 
+  overflow: hidden;
+  background: #1a1a1a;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.NoteEditor__empty { 
+  padding: 4rem 2rem; 
+  font-size: 1rem; 
+  opacity: .7;
+  text-align: center;
+}
+
+.NoteEditor__pageTitle { 
+  font-size: 1.5rem; 
+  font-weight: 600; 
+  border: none; 
+  background: transparent; 
+  outline: none; 
+  margin-bottom: 2rem; 
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.NoteEditor__chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-bottom: 9rem; /* Increased padding to account for larger input area */
+}
+
+.NoteEditor__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 0.2rem 0;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  margin-bottom: 0.2rem;
+}
+
+.NoteEditor__headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.NoteEditor__headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.NoteEditor__hamburger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: var(--accent-translucent);
+  border-radius: 0.375rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.NoteEditor__hamburger:hover {
+  background: var(--hover);
+  transform: translateY(-1px);
+}
+
+.NoteEditor__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+}
+
+.NoteEditor__title:hover {
+  background: var(--accent-translucent);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+.NoteEditor__titleInput {
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: var(--accent-translucent);
+  border: 1px solid var(--text-secondary);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  color: #ffffff;
+  outline: none;
+  min-width: 200px;
+}
+
+.NoteEditor__titleInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.NoteEditor__header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.NoteEditor__downloadBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+.NoteEditor__downloadBtn:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.NoteEditor__downloadBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.NoteEditor__downloadBtn i {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.NoteEditor__messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.NoteEditor__welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 2rem;
+  margin-left: 2rem;
+  opacity: 0.95;
+  max-width: 1200px;
+}
+
+.welcome-greeting {
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.welcome-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  font-weight: 400;
+}
+
+.welcome-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.welcome-feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.welcome-feature-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+}
+
+.welcome-feature-card .feature-icon {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.welcome-feature-card h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.welcome-feature-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.NoteEditor__welcome h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.NoteEditor__welcome p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.message {
+  max-width: 80%;
+  margin-bottom: 1rem;
+}
+
+.message--user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+}
+
+.message--assistant {
+  align-self: flex-start;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+}
+
+.message__content {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+/* HTML formatting styles for chat messages */
+.message__content h1,
+.message__content h2,
+.message__content h3,
+.message__content h4,
+.message__content h5,
+.message__content h6 {
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 600;
+  color: inherit;
+}
+
+.message__content h1 { font-size: 1.5rem; }
+.message__content h2 { font-size: 1.3rem; }
+.message__content h3 { font-size: 1.1rem; }
+.message__content h4 { font-size: 1rem; }
+
+.message__content p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.message__content ul,
+.message__content ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.message__content li {
+  margin: 0.25rem 0;
+}
+
+.message__content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+}
+
+.message__content th,
+.message__content td {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.message__content th {
+  background: var(--surface-subtle);
+  font-weight: 600;
+}
+
+.message__content strong {
+  font-weight: 600;
+}
+
+.message__content em {
+  font-style: italic;
+}
+
+.message__content code {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.85em;
+}
+
+.message__content pre {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.message__content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.NoteEditor__inputArea {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.2rem 0.6rem 0.8rem 0.6rem;
+  position: absolute;
+  bottom: 0.3rem;
+  left: 2rem;
+  right: 2rem;
+  z-index: 10;
+  margin-top: 1.5rem;
+}
+
+.NoteEditor__inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.NoteEditor__input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  resize: none;
+  min-height: 3rem;
+  max-height: 8rem;
+  width: 100%;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.NoteEditor__input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+.NoteEditor__input::placeholder {
+  color: var(--text-secondary);
+}
+
+.NoteEditor__inputControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.NoteEditor__languageSelect {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.65rem 0.75rem 0.4rem 0.75rem;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--text-primary);
+  cursor: pointer;
+  min-width: 120px;
+  transition: all 0.2s ease;
+}
+
+.NoteEditor__languageSelect:hover {
+  border-color: var(--accent);
+}
+
+.NoteEditor__languageSelect:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.NoteEditor__languageSelect:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.NoteEditor__sendBtn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.375rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.NoteEditor__sendBtn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.NoteEditor__sendBtn:disabled {
+  background: var(--border);
+  cursor: not-allowed;
+}
+.NoteEditor__pageTitle::placeholder {
+  color: var(--text-tertiary);
+}
+.NoteEditor__content { 
+  flex: 1; 
+  resize: none; 
+  width: 100%; 
+  border: none; 
+  background: transparent; 
+  outline: none; 
+  font-family: 'Google Sans', sans-serif; 
+  line-height: 1.6; 
+  color: var(--text-primary); 
+  font-size: 16px; 
+  padding: 0; 
+  overflow-y: auto;
+  margin: 0;
+}
+.NoteEditor__content::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Visual Podcast in Chat Styles */
+.message__visual-podcast {
+  padding: 0 !important;
+}
+
+.visual-podcast-preview {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 1rem;
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.visual-podcast-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.visual-podcast-header i {
+  font-size: 1.2rem;
+  color: #ffd700;
+}
+
+.visual-podcast-title {
+  flex: 1;
+  font-size: 1rem;
+}
+
+.visual-podcast-meta {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+.visual-podcast-play-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  width: 100%;
+  justify-content: center;
+}
+
+.visual-podcast-play-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.visual-podcast-play-btn i {
+  font-size: 1.2rem;
+}
+
+.visual-podcast-video-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.visual-podcast-video-info i {
+  color: #ffd700;
+}

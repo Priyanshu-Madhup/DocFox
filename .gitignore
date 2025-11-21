@@ -13,10 +13,21 @@
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Backend environment files
+backend/.env
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/data/uploaded_files/
+backend/data/generated_images/
+backend/data/knowledge_graphs/
+backend/*.mp4
 
 npm-debug.log*
 yarn-debug.log*

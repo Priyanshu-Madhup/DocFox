@@ -1,0 +1,219 @@
+.mindmap-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.mindmap-modal {
+  width: 90vw; /* Larger modal for more spacing */
+  height: 85vh; /* Larger modal for more spacing */
+  background: var(--surface-subtle);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.mindmap-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.mindmap-modal__header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mindmap-modal__close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.mindmap-modal__close:hover {
+  background: var(--hover);
+  color: var(--text-primary);
+}
+
+.mindmap-modal__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mindmap-modal__loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.mindmap-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mindmap-controls {
+  padding: 1rem 2rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.mindmap-svg {
+  flex: 1;
+  width: 100%;
+  min-height: 600px;
+  background: var(--surface-subtle);
+  cursor: grab;
+  border: 2px solid #444;
+}
+
+.mindmap-svg:active {
+  cursor: grabbing;
+}
+
+/* D3 Tree Styles */
+.mindmap-svg .link {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2px;
+  stroke-opacity: 0.6;
+}
+
+.mindmap-svg .node circle {
+  stroke: var(--border);
+  stroke-width: 2px;
+  transition: all 0.2s ease;
+}
+
+.mindmap-svg .node:hover circle {
+  stroke-width: 3px;
+  transform: scale(1.1);
+}
+
+.mindmap-svg .node--internal circle {
+  fill: var(--accent);
+}
+
+.mindmap-svg .node--leaf circle {
+  fill: #34a853;
+}
+
+.mindmap-svg .node text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  fill: var(--text-primary);
+  pointer-events: none;
+  user-select: none;
+}
+
+.mindmap-svg .node--internal text {
+  font-weight: 600;
+}
+
+.mindmap-svg .node--leaf text {
+  font-weight: 400;
+}
+
+/* Hover effects for nodes */
+.mindmap-svg .node {
+  transition: all 0.2s ease;
+}
+
+.mindmap-svg .node:hover {
+  filter: brightness(1.1);
+}
+
+.mindmap-svg .node:hover text {
+  fill: var(--accent);
+  font-weight: 600;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .mindmap-modal {
+    width: 90vw;
+    height: 80vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .mindmap-modal {
+    width: 95vw;
+    height: 85vh;
+  }
+  
+  .mindmap-modal__header {
+    padding: 1rem;
+  }
+  
+  .mindmap-modal__header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .mindmap-controls {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Dark mode specific adjustments */
+html.dark .mindmap-svg .link {
+  stroke: #404040;
+}
+
+html.dark .mindmap-svg .node circle {
+  stroke: #404040;
+}
+
+html.dark .mindmap-svg .node--internal circle {
+  fill: #3b82f6;
+}
+
+html.dark .mindmap-svg .node--leaf circle {
+  fill: #34a853;
+}

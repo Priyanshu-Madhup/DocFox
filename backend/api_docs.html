@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocFox API</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --surface-subtle: #f1f3f4;
+            --border: #e8eaed;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --accent: #1a73e8;
+            --accent-translucent: rgba(26, 115, 232, 0.1);
+            --hover: #f1f3f4;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1f1f1f;
+                --surface: #2d2d2d;
+                --surface-subtle: #3c4043;
+                --border: #5f6368;
+                --text-primary: #e8eaed;
+                --text-secondary: #9aa0a6;
+                --accent: #8ab4f8;
+                --accent-translucent: rgba(138, 180, 248, 0.1);
+                --hover: #3c4043;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            margin: 2rem 0 1rem 0;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            margin: 1.5rem 0 0.5rem 0;
+            color: var(--accent);
+        }
+
+        .endpoint {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .get { background: #4caf50; color: white; }
+        .post { background: #2196f3; color: white; }
+        .put { background: #ff9800; color: white; }
+        .delete { background: #f44336; color: white; }
+
+        .path {
+            font-family: 'Courier New', monospace;
+            background: var(--surface-subtle);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .description {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-note {
+            background: var(--accent-translucent);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        code {
+            background: var(--surface-subtle);
+            padding: 0.125rem 0.25rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+
+        .base-url {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦊 DocFox API Documentation</h1>
+        <p>A NotebookLM-style document processing and chat API with user authentication and isolated storage.</p>
+
+        <div class="base-url">
+            <strong>Base URL:</strong> <code>http://localhost:8000</code><br>
+            <strong>Interactive Docs:</strong> <a href="http://localhost:8000/docs" style="color: var(--accent)">http://localhost:8000/docs</a>
+        </div>
+
+        <div class="auth-note">
+            <strong>🔐 Authentication Required:</strong> Most endpoints require a Bearer token. Include the token in the Authorization header: <code>Authorization: Bearer your_token_here</code>
+        </div>
+
+        <h2>Authentication Endpoints</h2>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/api/auth/register</span>
+            <div class="description">Register a new user account</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/api/auth/login</span>
+            <div class="description">Login and receive access token</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="path">/api/auth/me</span>
+            <div class="description">Get current user information</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <span class="path">/api/auth/me</span>
+            <div class="description">Update current user information</div>
+        </div>
+
+        <h2>Notebook Management</h2>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="path">/api/notebooks/</span>
+            <div class="description">Get all notebooks for the current user</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/api/notebooks/</span>
+            <div class="description">Create a new notebook</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="path">/api/notebooks/{notebook_id}</span>
+            <div class="description">Get a specific notebook with documents and chat messages</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <span class="path">/api/notebooks/{notebook_id}</span>
+            <div class="description">Update notebook title</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <span class="path">/api/notebooks/{notebook_id}</span>
+            <div class="description">Delete notebook and all its content</div>
+        </div>
+
+        <h2>Document Management</h2>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/api/notebooks/{notebook_id}/documents</span>
+            <div class="description">Upload a PDF document to a notebook</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <span class="path">/api/notebooks/{notebook_id}/documents/{document_id}</span>
+            <div class="description">Delete a document from a notebook</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/api/notebooks/{notebook_id}/process</span>
+            <div class="description">Process selected documents for AI analysis</div>
+        </div>
+
+        <h2>Chat System</h2>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="path">/api/chat/{notebook_id}/messages</span>
+            <div class="description">Get all chat messages for a notebook</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/api/chat/{notebook_id}/messages</span>
+            <div class="description">Send a message and get AI response</div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <span class="path">/api/chat/{notebook_id}/messages</span>
+            <div class="description">Clear all chat messages for a notebook</div>
+        </div>
+
+        <h2>User Isolation Features</h2>
+        <ul>
+            <li>✅ Each user has their own isolated database records</li>
+            <li>✅ User-specific file storage directories</li>
+            <li>✅ Notebooks, documents, and chat history are private per user</li>
+            <li>✅ JWT-based authentication with secure password hashing</li>
+            <li>✅ Automatic cleanup when users delete notebooks</li>
+        </ul>
+
+        <h2>Getting Started</h2>
+        <ol>
+            <li>Register a new account: <code>POST /api/auth/register</code></li>
+            <li>Login to get your token: <code>POST /api/auth/login</code></li>
+            <li>Create a notebook: <code>POST /api/notebooks/</code></li>
+            <li>Upload PDF documents: <code>POST /api/notebooks/{id}/documents</code></li>
+            <li>Process documents: <code>POST /api/notebooks/{id}/process</code></li>
+            <li>Start chatting: <code>POST /api/chat/{id}/messages</code></li>
+        </ol>
+    </div>
+</body>
+</html>

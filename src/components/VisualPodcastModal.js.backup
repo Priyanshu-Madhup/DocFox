@@ -1,0 +1,314 @@
+import React, { useEffect, useState } from 'react';
+import './VisualPodcastModal.css';
+
+const VisualPodcastModal = ({ isOpen, onClose, notebookId, documentName }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [slides, setSlides] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [error, setError] = useState('');
+  const [isPresenting, setIsPresenting] = useState(false);
+  const [videoUrl, setVideoUrl] = useState(null);
+
+  console.log('VisualPodcastModal rendered with:', { isOpen, notebookId, documentName });
+
+  useEffect(() => {
+    console.log('VisualPodcastModal useEffect:', { isOpen, notebookId, documentName });
+    if (isOpen && notebookId && documentName) {
+      // Clear previous data
+      setSlides([]);
+      setCurrentSlide(0);
+      setError('');
+      setIsPresenting(false);
+      
+      // Start visual podcast generation
+      setTimeout(() => {
+        generateVisualPodcast();
+      }, 100);
+    }
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, notebookId, documentName]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (!isPresenting || slides.length === 0) return;
+      
+      if (event.key === 'ArrowRight' || event.key === ' ') {
+        event.preventDefault();
+        nextSlide();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        previousSlide();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        setIsPresenting(false);
+      }
+    };
+
+    if (isPresenting) {
+      document.addEventListener('keydown', handleKeyPress);
+      return () => document.removeEventListener('keydown', handleKeyPress);
+    }
+  }, [isPresenting, slides.length, currentSlide]);
+
+  if (!isOpen) {
+    return null;
+  }
+
+  const generateVisualPodcast = async () => {
+    setIsLoading(true);
+    setError('');
+    console.log('Starting visual podcast generation for:', { notebookId, documentName });
+    
+    try {
+      const response = await fetch('http://localhost:8001/visual-podcast', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          document_name: documentName,
+          notebook_id: notebookId
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Visual podcast generation failed');
+      }
+
+      const data = await response.json();
+      console.log('Visual podcast response:', data);
+      
+      if (data.success && data.slides && data.slides.length > 0) {
+        setSlides(data.slides);
+        setVideoUrl(data.video_url || null);
+        
+        // Trigger a refresh of the chat history to show new messages
+        if (window.refreshChatHistory) {
+          window.refreshChatHistory();
+        }
+      } else {
+        setError(data.message || 'No slides generated.');
+      }
+
+    } catch (error) {
+      console.error('Visual podcast generation error:', error);
+      setError(error.message || 'Failed to generate visual podcast');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const nextSlide = () => {
+    if (currentSlide < slides.length - 1) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  const previousSlide = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
+  const startPresentation = () => {
+    setIsPresenting(true);
+    setCurrentSlide(0);
+  };
+
+  const exitPresentation = () => {
+    setIsPresenting(false);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  return (
+    <div className="visual-podcast-modal-overlay" onClick={onClose}>
+      <div className={`visual-podcast-modal ${isPresenting ? 'presenting' : ''}`} onClick={(e) => e.stopPropagation()}>
+        {!isPresenting && (
+          <div className="visual-podcast-modal__header">
+            <div className="visual-podcast-modal__title">
+              <i className="bi bi-camera-reels"></i>
+              <span>Visual Podcast</span>
+              {documentName && <small>for {documentName}</small>}
+            </div>
+            <button className="visual-podcast-modal__close" onClick={onClose}>
+              <i className="bi bi-x"></i>
+            </button>
+          </div>
+        )}
+
+        <div className="visual-podcast-modal__content">
+          {isLoading ? (
+            <div className="visual-podcast-modal__loading">
+              <div className="loading-spinner"></div>
+              <p>Generating visual podcast slides...</p>
+              <p className="loading-subtitle">Creating professional presentation slides with AI</p>
+            </div>
+          ) : error ? (
+            <div className="visual-podcast-modal__error">
+              <i className="bi bi-exclamation-triangle"></i>
+              <h3>Generation Failed</h3>
+              <p>{error}</p>
+              <button onClick={generateVisualPodcast} className="retry-button">
+                <i className="bi bi-arrow-clockwise"></i>
+                Try Again
+              </button>
+            </div>
+          ) : slides.length > 0 ? (
+            <>
+              {isPresenting ? (
+                <div className="presentation-view">
+                  <div className="presentation-slide">
+                    <img 
+                      src={slides[currentSlide].image_url} 
+                      alt={slides[currentSlide].title}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="slide-fallback" style={{ display: 'none' }}>
+                      <h2>{slides[currentSlide].title}</h2>
+                      <ul>
+                        {slides[currentSlide].bullet_points.map((point, idx) => (
+                          <li key={idx}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    {/* Audio controls */}
+                    {slides[currentSlide].audio_url && (
+                      <div className="slide-audio-controls">
+                        <audio controls>
+                          <source src={slides[currentSlide].audio_url} type="audio/wav" />
+                          Your browser does not support the audio element.
+                        </audio>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="presentation-controls">
+                    <button 
+                      onClick={previousSlide} 
+                      disabled={currentSlide === 0}
+                      className="control-btn"
+                    >
+                      <i className="bi bi-chevron-left"></i>
+                    </button>
+                    
+                    <div className="slide-counter">
+                      {currentSlide + 1} / {slides.length}
+                    </div>
+                    
+                    <button 
+                      onClick={nextSlide} 
+                      disabled={currentSlide === slides.length - 1}
+                      className="control-btn"
+                    >
+                      <i className="bi bi-chevron-right"></i>
+                    </button>
+                    
+                    <button onClick={exitPresentation} className="exit-btn">
+                      <i className="bi bi-x-lg"></i>
+                      Exit
+                    </button>
+                  </div>
+                  
+                  <div className="keyboard-hint">
+                    Use ← → arrow keys or spacebar to navigate • ESC to exit
+                  </div>
+                </div>
+              ) : (
+                <div className="slides-overview">
+                  <div className="overview-header">
+                    <h3>Generated {slides.length} Slides</h3>
+                    <div className="overview-actions">
+                      {videoUrl && (
+                        <a 
+                          href={videoUrl} 
+                          download="visual-podcast.mp4"
+                          className="download-video-button"
+                          title="Download MP4 Video"
+                        >
+                          <i className="bi bi-download"></i>
+                          Download Video
+                        </a>
+                      )}
+                      <button onClick={startPresentation} className="present-button">
+                        <i className="bi bi-play-fill"></i>
+                        Start Presentation
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="slides-grid">
+                    {slides.map((slide, index) => (
+                      <div 
+                        key={index} 
+                        className="slide-card" 
+                        onClick={() => {
+                          setCurrentSlide(index);
+                          startPresentation();
+                        }}
+                      >
+                        <div className="slide-preview">
+                          <img 
+                            src={slide.image_url} 
+                            alt={slide.title}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
+                          />
+                          <div className="slide-preview-fallback" style={{ display: 'none' }}>
+                            <h4>{slide.title}</h4>
+                            <ul>
+                              {slide.bullet_points.slice(0, 3).map((point, idx) => (
+                                <li key={idx}>{point}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="slide-number">
+                            {slide.slide_number}
+                          </div>
+                        </div>
+                        <div className="slide-details">
+                          <h4 className="slide-title">{slide.title}</h4>
+                          <p className="slide-points">{slide.bullet_points.length} key points</p>
+                          {slide.audio_url && (
+                            <div className="slide-audio-mini" onClick={(e) => e.stopPropagation()}>
+                              <audio controls>
+                                <source src={slide.audio_url} type="audio/wav" />
+                              </audio>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="no-slides">
+              <i className="bi bi-camera-reels"></i>
+              <h3>No Slides Generated</h3>
+              <p>No visual podcast slides were generated for this document.</p>
+              <button onClick={generateVisualPodcast} className="retry-button">
+                <i className="bi bi-arrow-clockwise"></i>
+                Generate Again
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default VisualPodcastModal;
